@@ -1,34 +1,29 @@
 import 'package:flutter/material.dart';
+import '../models/word_pair_model.dart';
 import 'package:english_words/english_words.dart';
-
 class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
-  var history = <WordPair>[];
+  final WordPairModel wordPairModel = WordPairModel();
 
   GlobalKey? historyListKey;
 
   void getNext() {
-    history.insert(0, current);
+    wordPairModel.getNext();
     var animatedList = historyListKey?.currentState as AnimatedListState?;
     animatedList?.insertItem(0);
-    current = WordPair.random();
     notifyListeners();
   }
 
-  var favorites = <WordPair>[];
-
   void toggleFavorite([WordPair? pair]) {
-    pair = pair ?? current;
-    if (favorites.contains(pair)) {
-      favorites.remove(pair);
-    } else {
-      favorites.add(pair);
-    }
+    wordPairModel.toggleFavorite(pair);
     notifyListeners();
   }
 
   void removeFavorite(WordPair pair) {
-    favorites.remove(pair);
+    wordPairModel.removeFavorite(pair);
     notifyListeners();
   }
+
+  WordPair get current => wordPairModel.current;
+  List<WordPair> get history => wordPairModel.history;
+  List<WordPair> get favorites => wordPairModel.favorites;
 }
